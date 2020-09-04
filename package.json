@@ -1,0 +1,32 @@
+{
+    "name": "wecenter-backup-helper",
+    "version": "0.1.0",
+    "description": "Backup WeCenter sites with ease",
+    "main": "dist/main.js",
+    "module": "src/main.ts",
+    "dependencies": {
+        "fs-extra": "^8.1.0",
+        "jsdom": "^15.1.1",
+        "node-fetch": "^2.6.0"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^8.0.0",
+        "@types/jsdom": "^12.2.4",
+        "@types/node-fetch": "^2.5.0",
+        "typescript": "^3.6.2"
+    },
+    "scripts": {
+        "build": "tsc",
+        "watch": "tsc --watch"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Xmader/wecenter-backup-helper.git"
+    },
+    "author": "Xmader",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Xmader/wecenter-backup-helper/issues"
+    },
+    "homepage": "https://github.com/Xmader/wecenter-backup-helper#readme"
+}
