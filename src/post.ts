@@ -2,6 +2,7 @@
 import { JSDOM } from "jsdom"
 import { Item, PostType, ReplyTypeMap, Options, fetchReq, saveJson, formatInt } from "./utils"
 import { PostLike, parsePostLike, parseUid } from "./postlike"
+import { fetchDiscussionsIt } from "./discussions"
 
 const TAG_SELECTOR = ".aw-topic-bar .topic-tag"
 const AUTHOR_SELECTOR = ".aw-side-bar .aw-user-name"
@@ -86,6 +87,20 @@ export async function* fetchPostIt<T extends PostType> (postType: T, postId: num
             }
         } else if (items.length == 0) {
             return
+        }
+    }
+}
+
+export async function* fetchPostWithDiscussionsIt (postType: PostType, postId: number, options: Options) {
+    for await (const d of fetchPostIt(postType, postId, options)) {
+        yield d
+
+        // fetch discussions
+        if (
+            (d.type === "question" || d.type === "answer") &&
+            d.discussionCount > 0
+        ) {
+            yield* fetchDiscussionsIt(d.type, d.id, options)
         }
     }
 }
