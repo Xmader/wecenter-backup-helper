@@ -1,8 +1,8 @@
 
 import { Options, PostType } from "./utils"
-import { saveTopicInfo } from "./topic"
-import { saveUserInfo } from "./user"
-import { savePostWithDiscussions } from "./post"
+import { saveTopicInfo, ERR_TOPIC_NOT_FOUND } from "./topic"
+import { saveUserInfo, ERR_USER_NOT_FOUND } from "./user"
+import { savePostWithDiscussions, ERR_POST_NOT_FOUND } from "./post"
 
 type Type = PostType | "topic" | "user"
 
@@ -16,6 +16,8 @@ function save (type: Type, id: number, options: Options): Promise<void> {
     }
 }
 
+const ERR_NOT_FOUND = [ERR_TOPIC_NOT_FOUND, ERR_USER_NOT_FOUND, ERR_POST_NOT_FOUND]
+
 export async function saveSeriesOf (type: Type, options: Options, startId: number = 1, endId: number = Infinity, maxConcurrent: number = 100) {
     let plist: Array<() => Promise<boolean>> = []
 
@@ -25,7 +27,10 @@ export async function saveSeriesOf (type: Type, options: Options, startId: numbe
                 await save(type, id, options)
                 return true
             } catch (err) {
-                console.error(`\n🚨\n${type} id: ${id}\nerror:`, err)
+                // silently ignore `* not found`
+                if (!ERR_NOT_FOUND.includes(err)) {
+                    console.error(`\n🚨\n${type} id: ${id}\nerror:`, err)
+                }
                 return false
             }
         })
