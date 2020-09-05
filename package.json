@@ -2,8 +2,8 @@
     "name": "wecenter-backup-helper",
     "version": "0.1.0",
     "description": "Backup WeCenter sites with ease",
-    "main": "dist/main.js",
-    "module": "src/main.ts",
+    "main": "dist/index.js",
+    "module": "src/index.ts",
     "dependencies": {
         "fs-extra": "^8.1.0",
         "jsdom": "^15.1.1",
