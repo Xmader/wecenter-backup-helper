@@ -66,6 +66,11 @@ const parseReply = <PT extends PostType> (postType: PT, postId: number, itemEl: 
     }
 }
 
+const hasDiscussion = (d: Post<PostType> | Reply<PostType>) => {
+    return (d.type === "question" || d.type === "answer")
+        && d.discussionCount > 0
+}
+
 
 export async function* fetchPostIt<T extends PostType> (postType: T, postId: number, options: Options) {
     for (let page = 1; ; page++) {
@@ -102,11 +107,8 @@ export async function* fetchPostWithDiscussionsIt (postType: PostType, postId: n
         yield d
 
         // fetch discussions
-        if (
-            (d.type === "question" || d.type === "answer") &&
-            d.discussionCount > 0
-        ) {
-            yield* fetchDiscussionsIt(d.type, d.id, options)
+        if (hasDiscussion(d)) {
+            yield* fetchDiscussionsIt(d.type as any, d.id, options)
         }
     }
 }
