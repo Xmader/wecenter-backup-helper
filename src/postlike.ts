@@ -25,8 +25,10 @@ export const parsePostLike = (parentEl: Element): PostLike => {
     const agreeEl = parentEl.querySelector(AGREE_SELECTOR) as HTMLElement
     const agreeCount = formatInt(agreeEl.textContent)
 
-    const discussionEl = parentEl.querySelector(DISCUSSION_SELECTOR) as HTMLElement
-    const discussionCount = formatInt(discussionEl.dataset.commentCount)
+    const discussionEl = parentEl.querySelector(DISCUSSION_SELECTOR) as HTMLElement | null
+    const discussionCount = discussionEl
+        ? formatInt(discussionEl.dataset.commentCount)
+        : 0
 
     return {
         contents,
