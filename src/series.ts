@@ -18,7 +18,10 @@ function save (type: Type, id: number, options: Options): Promise<void> {
 
 const ERR_NOT_FOUND = [ERR_TOPIC_NOT_FOUND, ERR_USER_NOT_FOUND, ERR_POST_NOT_FOUND]
 
-export async function saveSeriesOf (type: Type, options: Options, startId: number = 1, endId: number = Infinity, maxConcurrent: number = 100) {
+export async function saveSeriesOf (type: Type, options: Options, startId: number = 1, endId: number = Infinity) {
+    const maxConcurrent = options.maxConcurrent || 100
+    console.info("maxConcurrent:", maxConcurrent)
+
     let plist: Array<() => Promise<boolean>> = []
 
     for (let id = startId; id <= endId; id++) {
