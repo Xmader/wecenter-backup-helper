@@ -105,7 +105,7 @@ export async function* fetchPostWithDiscussionsIt (postType: PostType, postId: n
     }
 }
 
-export async function saveAll (postType: PostType, postId: number, options: Options) {
+export async function savePostWithDiscussions (postType: PostType, postId: number, options: Options) {
     for await (const d of fetchPostWithDiscussionsIt(postType, postId, options)) {
         await saveItemJson(d, options)
     }
