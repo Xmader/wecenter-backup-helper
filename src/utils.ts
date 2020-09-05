@@ -20,23 +20,24 @@ export type PostType =
     | "question"
     | "article"
     | "video"
-export type ReplyType =
+export type DiscussionParent =
+    | "question"
     | "answer"
-    | "article_comment"
-    | "video_comment"
-export type DiscussionType =
-    | "question_discussion"
-    | "answer_discussion"
+export const ReplyTypeMap = {
+    question: "answer" as const,
+    article: "article_comment" as const,
+    video: "video_comment" as const,
+}
+export const DiscussionTypeMap = {
+    question: "question_discussion" as const,
+    answer: "answer_discussion" as const,
+}
+export type ReplyType = typeof ReplyTypeMap[PostType]
+export type DiscussionType = typeof DiscussionTypeMap[DiscussionParent]
 export type ItemType =
     | PostType
     | ReplyType
     | DiscussionType
-
-export enum ReplyTypeMap {
-    "question" = "answer",
-    "article" = "article_comment",
-    "video" = "video_comment"
-}
 
 export interface Item<T extends ItemType, P extends ItemType = never> {
     type: T;

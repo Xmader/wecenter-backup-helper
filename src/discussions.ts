@@ -1,6 +1,6 @@
 
 import { JSDOM } from "jsdom"
-import { Item, Options, fetchReq, saveJson, formatContents, formatInt } from "./utils"
+import { Item, DiscussionParent, DiscussionTypeMap, Options, fetchReq, saveJson, formatContents, formatInt } from "./utils"
 import { parseUid } from "./postlike"
 
 const ITEM_CLASS = "aw-item"
@@ -8,14 +8,9 @@ const ITEMS_PER_PAGE = 100
 
 const CONTENT_CLASS = "markitup-box"
 
-export type ParentType = "question" | "answer"
+export interface Discussion<PT extends DiscussionParent> extends Item<typeof DiscussionTypeMap[PT], PT> { }
 
-export interface QuestionDiscussion extends Item<"question_discussion", "question"> { }
-export interface AnswerDiscussion extends Item<"answer_discussion", "answer"> { }
-export type Discussion = QuestionDiscussion | AnswerDiscussion
-
-
-const buildReqUrl = (siteUrl: string, parentType: ParentType, parentId: number, page: number = 1) => {
+const buildReqUrl = (siteUrl: string, parentType: DiscussionParent, parentId: number, page: number = 1) => {
     return `${siteUrl}/question/info/${parentType}_discussions/parent_id-${parentId}__page-${page}`
 }
 
@@ -34,12 +29,7 @@ const parseItem = (item: HTMLElement) => {
     }
 }
 
-// 3 overload function signatures
-export function fetchDiscussionsIt (parentType: "question", parentId: number, options: Options): AsyncGenerator<QuestionDiscussion>
-export function fetchDiscussionsIt (parentType: "answer", parentId: number, options: Options): AsyncGenerator<AnswerDiscussion>
-export function fetchDiscussionsIt (parentType: ParentType, parentId: number, options: Options): AsyncGenerator<Discussion>
-// the actual function
-export async function* fetchDiscussionsIt (parentType: ParentType, parentId: number, options: Options) {
+export async function* fetchDiscussionsIt<PT extends DiscussionParent> (parentType: PT, parentId: number, options: Options) {
     for (let page = 1; ; page++) {
         const url = buildReqUrl(options.siteUrl, parentType, parentId, page)
         const r = await fetchReq(url, options)
@@ -53,10 +43,10 @@ export async function* fetchDiscussionsIt (parentType: ParentType, parentId: num
             // check its type
             if (!item.classList.contains(ITEM_CLASS)) { continue }
 
-            const entry: Discussion = {
+            const entry: Discussion<PT> = {
                 type: `${parentType}_discussion` as any,
                 ...parseItem(item as HTMLDivElement),
-                parentType: parentType as any,
+                parentType: parentType,
                 parentId,
             }
             yield entry
@@ -75,13 +65,13 @@ export async function* fetchDiscussionsIt (parentType: ParentType, parentId: num
     }
 }
 
-export const saveDiscussionsIt = async function* (parentType: ParentType, parentId: number, options: Options) {
+export const saveDiscussionsIt = async function* (parentType: DiscussionParent, parentId: number, options: Options) {
     for await (const d of fetchDiscussionsIt(parentType, parentId, options)) {
         yield saveJson(`${parentId}/${d.id}`, d, options)
     }
 }
 
-export const saveDiscussions = async (parentType: ParentType, parentId: number, options: Options) => {
+export const saveDiscussions = async (parentType: DiscussionParent, parentId: number, options: Options) => {
     const it = saveDiscussionsIt(parentType, parentId, options)
     // eslint-disable-next-line
     for await (const _ of it) { }
