@@ -21,9 +21,13 @@ const ERR_NOT_FOUND = [ERR_TOPIC_NOT_FOUND, ERR_USER_NOT_FOUND, ERR_POST_NOT_FOU
 
 export async function saveSeriesOf (type: Type, options: Options, startId: number = 1, endId: number = Infinity) {
     const concurrency = options.concurrency || 100
+    const interval = options.interval
+    const intervalCap = options.intervalCap
     console.info("concurrency:", concurrency)
+    console.info("interval:", interval)
+    console.info("intervalCap:", intervalCap)
 
-    const queue = new PQueue({ concurrency })
+    const queue = new PQueue({ concurrency, interval, intervalCap })
 
     let results: boolean[] = []
     function updateResult (r: boolean) {

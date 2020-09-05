@@ -10,7 +10,10 @@ export interface Options {
     destDir: string;
 
     userAgent?: string;
+
     concurrency?: number;
+    interval?: number;
+    intervalCap?: number;
 
     checkPagination?: boolean;
     itemsPerPage?: number;
