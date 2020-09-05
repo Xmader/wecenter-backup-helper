@@ -12,6 +12,9 @@ const TITLE_SELECTOR = ".mod-head > h1"
 const REPLIES_SELECTOR = ".aw-feed-list > .aw-item"
 const ITEMS_PER_PAGE = 100
 
+const NOT_FOUND_TEXT = "Not Found"
+export const ERR_POST_NOT_FOUND = new Error("post not found")
+
 type TopicId = number
 
 export interface Post<T extends PostType> extends Item<T>, PostLike {
@@ -69,6 +72,9 @@ export async function* fetchPostIt<T extends PostType> (postType: T, postId: num
         const url = buildReqUrl(options.siteUrl, postType, postId, page)
         const r = await fetchReq(url, options)
         const html = await r.text()
+        if (html.startsWith(NOT_FOUND_TEXT)) {
+            throw ERR_POST_NOT_FOUND
+        }
 
         const doc = JSDOM.fragment(html)
         if (page == 1) {  // only emit `parsePost` on the first page (1-based index)
