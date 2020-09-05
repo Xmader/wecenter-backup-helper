@@ -1,5 +1,5 @@
 
-import fetch from "node-fetch"
+import fetch, { Response } from "node-fetch"
 import fs from "fs-extra"
 import path from "path"
 
@@ -65,7 +65,7 @@ export const formatInt = (i: string | number | null | undefined) => {
 }
 
 
-export const fetchReq = (url: string, options: Options) => {
+export const fetchReq = (url: string, options: Options): Promise<Response> => {
     return fetch(url, {
         headers: {
             "User-Agent": options.userAgent!,
