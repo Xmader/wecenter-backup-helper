@@ -2,7 +2,9 @@
 import { Item, formatContents, formatInt } from "./utils"
 
 const CONTENT_SELECTOR = ".markitup-box"
-const DATE_SELECTOR = ".mod-footer > .meta > span"
+const DATE_SELECTOR_QUESTION = ".mod-footer > .meta > span:first-child"
+const DATE_SELECTOR_ARTICLE = ".meta em"
+const DATE_SELECTOR = [DATE_SELECTOR_QUESTION, DATE_SELECTOR_ARTICLE].join(", ")
 const AGREE_SELECTOR = ".agree > .count"
 const DISCUSSION_SELECTOR = ".aw-add-comment"
 const USERNAME_SELECTOR = ".aw-user-name"
