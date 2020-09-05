@@ -25,7 +25,7 @@ export async function saveSeriesOf (type: Type, options: Options, startId: numbe
                 await save(type, id, options)
                 return true
             } catch (err) {
-                console.error(err)
+                console.error(`\n🚨\n${type} id: ${id}\nerror:`, err)
                 return false
             }
         })
