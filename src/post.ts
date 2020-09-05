@@ -1,6 +1,6 @@
 
 import { JSDOM } from "jsdom"
-import { Item, PostType, ReplyTypeMap, Options, fetchReq, saveJson, formatInt } from "./utils"
+import { Item, PostType, ReplyTypeMap, Options, fetchReq, saveItemJson, formatInt } from "./utils"
 import { PostLike, parsePostLike, parseUid } from "./postlike"
 import { fetchDiscussionsIt } from "./discussions"
 
@@ -102,5 +102,11 @@ export async function* fetchPostWithDiscussionsIt (postType: PostType, postId: n
         ) {
             yield* fetchDiscussionsIt(d.type, d.id, options)
         }
+    }
+}
+
+export async function saveAll (postType: PostType, postId: number, options: Options) {
+    for await (const d of fetchPostWithDiscussionsIt(postType, postId, options)) {
+        await saveItemJson(d, options)
     }
 }

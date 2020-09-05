@@ -1,6 +1,6 @@
 
 import { JSDOM } from "jsdom"
-import { Item, DiscussionParent, DiscussionTypeMap, Options, fetchReq, saveJson, formatContents, formatInt } from "./utils"
+import { Item, DiscussionParent, DiscussionTypeMap, Options, fetchReq, saveItemJson, formatContents, formatInt } from "./utils"
 import { parseUid } from "./postlike"
 
 const ITEM_CLASS = "aw-item"
@@ -67,7 +67,7 @@ export async function* fetchDiscussionsIt<PT extends DiscussionParent> (parentTy
 
 export const saveDiscussionsIt = async function* (parentType: DiscussionParent, parentId: number, options: Options) {
     for await (const d of fetchDiscussionsIt(parentType, parentId, options)) {
-        yield saveJson(`${parentId}/${d.id}`, d, options)
+        yield saveItemJson(d, options)
     }
 }
 

@@ -13,6 +13,8 @@ export interface Options {
 
     checkPagination?: boolean;
     itemsPerPage?: number;
+
+    progress?: (item: Item<any, any>) => any;
 }
 
 // https://github.com/pincong/pincong-wecenter/blob/master/models/publish.php#L91-L124
@@ -80,6 +82,11 @@ export const saveFile = async (filename: string, data: string | Buffer, options:
 
 export const saveJson = (basename: string, jsonObj: Record<string, any> & { type: string }, options: Options) => {
     return saveFile(`${jsonObj.type}/${basename}.json`, JSON.stringify(jsonObj), options)
+}
+
+export const saveItemJson = (item: Item<any, any>, options: Options) => {
+    options.progress?.(item)
+    return saveJson(`${item.parentId || ""}/${item.id}`, item, options)
 }
 
 
