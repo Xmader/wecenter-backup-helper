@@ -29,8 +29,11 @@ const parsePost = <T extends PostType> (postType: T, postId: number, doc: Parent
 
     const tagEls = [...doc.querySelectorAll(TAG_SELECTOR)]
     const topics = tagEls.map(el => {
-        return formatInt((el as HTMLElement).dataset.id)  // topic_id
-    })
+        const topicId = (el as HTMLElement).dataset.id
+        if (topicId) {
+            return formatInt(topicId)
+        }
+    }).filter(Boolean) as number[]
 
     const userEl = doc.querySelector(AUTHOR_SELECTOR) as HTMLElement
     const uid = formatInt(userEl.dataset.id)
