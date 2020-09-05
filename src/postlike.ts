@@ -2,6 +2,7 @@
 import { Item, formatContents, formatInt } from "./utils"
 
 const CONTENT_SELECTOR = ".markitup-box"
+const VIDEO_SELECTOR = ".ab-video > iframe"
 const DATE_SELECTOR_QUESTION = ".mod-footer > .meta > span:first-child"
 const DATE_SELECTOR_ARTICLE = ".meta em"
 const DATE_SELECTOR = [DATE_SELECTOR_QUESTION, DATE_SELECTOR_ARTICLE].join(", ")
@@ -15,11 +16,17 @@ const USERNAME_SELECTOR = ".aw-user-name"
 export interface PostLike extends Pick<Item<any>, "contents" | "date"> {
     agreeCount: number;
     discussionCount: number;
+    videoUrl?: string;
 }
 
 export const parsePostLike = (parentEl: Element): PostLike => {
     const contentEl = parentEl.querySelector(CONTENT_SELECTOR) as HTMLDivElement
     const contents = formatContents(contentEl)
+
+    const videoEl = parentEl.querySelector(VIDEO_SELECTOR) as HTMLIFrameElement | null
+    const videoUrl = videoEl
+        ? videoEl.src
+        : undefined
 
     const dateEl = parentEl.querySelector(DATE_SELECTOR)!
     const date = dateEl.textContent!
@@ -34,9 +41,10 @@ export const parsePostLike = (parentEl: Element): PostLike => {
 
     return {
         contents,
+        videoUrl,
         date,
         agreeCount,
-        discussionCount
+        discussionCount,
     }
 }
 
