@@ -1,5 +1,5 @@
 
-import { Options, fetchReq, saveJson } from "./utils"
+import { Options, BaseItem, fetchReq, saveItemJson } from "./utils"
 
 export const ERR_USER_NOT_FOUND = new Error("user not found")
 
@@ -7,7 +7,7 @@ const buildReqUrl = (siteUrl: string, uid: number) => {
     return `${siteUrl}/people/ajax/user_info/uid-${uid}`
 }
 
-export interface UserInfo {
+export interface RawUserInfo {
     type: "people";
 
     uid: string; // number
@@ -22,6 +22,7 @@ export interface UserInfo {
     signature?: string;
 
     verified?: boolean | null;
+    /** 禁用私信 */
     pm_disabled?: boolean;
 
     // for authenticated user
@@ -29,8 +30,37 @@ export interface UserInfo {
     is_me?: boolean;
 }
 
-interface UserInfoErr {
+interface RawUserInfoErr {
     uid: null;
+}
+
+export interface UserInfo extends BaseItem<"people"> {
+    username: string;
+
+    reputation: number;
+    agreeCount: number;
+    fansCount: number;
+
+    avatar?: string;
+    signature?: string;
+
+    verified?: boolean | null;
+    pmDisabled?: boolean;
+}
+
+const formatUserInfo = (raw: RawUserInfo): UserInfo => {
+    return {
+        type: "people",
+        id: +raw.uid,
+        username: raw.user_name,
+        reputation: +raw.reputation,
+        agreeCount: +raw.agree_count,
+        fansCount: +raw.fans_count,
+        avatar: raw.avatar_file,
+        signature: raw.signature,
+        verified: raw.verified,
+        pmDisabled: raw.pm_disabled,
+    }
 }
 
 
@@ -40,11 +70,11 @@ interface UserInfoErr {
 export const fetchUserInfo = async (uid: number, options: Options) => {
     const url = buildReqUrl(options.siteUrl, uid)
     const r = await fetchReq(url, options)
-    const data: UserInfo | UserInfoErr = await r.json()
+    const data: RawUserInfo | RawUserInfoErr = await r.json()
     if (!data.uid) {
         throw ERR_USER_NOT_FOUND
     }
-    return data
+    return formatUserInfo(data)
 }
 
 /**
@@ -52,6 +82,6 @@ export const fetchUserInfo = async (uid: number, options: Options) => {
  */
 export const saveUserInfo = async (uid: number, options: Options) => {
     const data = await fetchUserInfo(uid, options)
-    await saveJson(uid.toString(), data, options)
+    await saveItemJson(data, options)
 }
 

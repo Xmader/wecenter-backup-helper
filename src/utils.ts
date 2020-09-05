@@ -15,7 +15,7 @@ export interface Options {
     checkPagination?: boolean;
     itemsPerPage?: number;
 
-    progress?: (item: Item<any, any>) => any;
+    progress?: (item: BaseItem) => any;
 }
 
 // https://github.com/pincong/pincong-wecenter/blob/master/models/publish.php#L91-L124
@@ -42,13 +42,15 @@ export type ItemType =
     | ReplyType
     | DiscussionType
 
-export interface Item<T extends ItemType, P extends ItemType = never> {
+export interface BaseItem<T extends string = any, P extends string = any> {
     type: T;
     id: number;
 
     parentType?: P;
     parentId?: number;
+}
 
+export interface Item<T extends ItemType, P extends ItemType = never> extends BaseItem<T, P> {
     /** The author's user id */
     uid: number;
 
@@ -63,6 +65,10 @@ export interface Item<T extends ItemType, P extends ItemType = never> {
 export const formatInt = (i: string | number | null | undefined) => {
     // @ts-ignore
     return i | 0
+}
+
+export const formatBoolString = (s: string | undefined): boolean => {
+    return !!+s!
 }
 
 
@@ -85,7 +91,7 @@ export const saveJson = (basename: string, jsonObj: Record<string, any> & { type
     return saveFile(`${jsonObj.type}/${basename}.json`, JSON.stringify(jsonObj), options)
 }
 
-export const saveItemJson = (item: Item<any, any>, options: Options) => {
+export const saveItemJson = (item: BaseItem, options: Options) => {
     options.progress?.(item)
     return saveJson(`${item.parentId || ""}/${item.id}`, item, options)
 }
