@@ -1,5 +1,5 @@
 
-import { Options, BaseItem, fetchReq, saveItemJson } from "./utils"
+import { Options, BaseItem, fetchText, saveItemJson } from "./utils"
 
 export const ERR_USER_NOT_FOUND = new Error("user not found")
 
@@ -69,8 +69,8 @@ const formatUserInfo = (raw: RawUserInfo): UserInfo => {
  */
 export const fetchUserInfo = async (uid: number, options: Options) => {
     const url = buildReqUrl(options.siteUrl, uid)
-    const r = await fetchReq(url, options)
-    const data: RawUserInfo | RawUserInfoErr = await r.json()
+    const jsonStr = await fetchText(url, options)
+    const data: RawUserInfo | RawUserInfoErr = JSON.parse(jsonStr)
     if (!data.uid) {
         throw ERR_USER_NOT_FOUND
     }

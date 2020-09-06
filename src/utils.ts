@@ -1,5 +1,7 @@
 
-import fetch, { Response } from "node-fetch"
+// @ts-ignore
+import Humanoid from "humanoid-js"
+import fetch from "node-fetch"
 import fs from "fs-extra"
 import path from "path"
 
@@ -10,6 +12,7 @@ export interface Options {
     destDir: string;
 
     userAgent?: string;
+    bypassCloudflare?: boolean;
 
     concurrency?: number;
     interval?: number;
@@ -75,12 +78,22 @@ export const formatBoolString = (s: string | undefined): boolean => {
 }
 
 
-export const fetchReq = (url: string, options: Options): Promise<Response> => {
-    return fetch(url, {
-        headers: {
-            "User-Agent": options.userAgent!,
-        }
-    })
+let humanoid = new Humanoid()
+
+export const fetchText = async (url: string, options: Options): Promise<string> => {
+    if (options.bypassCloudflare) {
+        // use https://github.com/evyatarmeged/Humanoid to bypass Cloudflare challenges
+        const r = await humanoid.get(url)
+        return r.body
+    } else {
+        // use normal node-fetch
+        const r = await fetch(url, {
+            headers: {
+                "User-Agent": options.userAgent!,
+            }
+        })
+        return r.text()
+    }
 }
 
 

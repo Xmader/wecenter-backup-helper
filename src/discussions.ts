@@ -1,6 +1,6 @@
 
 import { JSDOM } from "jsdom"
-import { Item, DiscussionParent, DiscussionTypeMap, Options, fetchReq, saveItemJson, formatContents, formatInt } from "./utils"
+import { Item, DiscussionParent, DiscussionTypeMap, Options, fetchText, saveItemJson, formatContents, formatInt } from "./utils"
 import { parseUid } from "./postlike"
 
 const ITEM_CLASS = "aw-item"
@@ -32,8 +32,7 @@ const parseItem = (item: HTMLElement) => {
 export async function* fetchDiscussionsIt<PT extends DiscussionParent> (parentType: PT, parentId: number, options: Options) {
     for (let page = 1; ; page++) {
         const url = buildReqUrl(options.siteUrl, parentType, parentId, page)
-        const r = await fetchReq(url, options)
-        const html = await r.text()
+        const html = await fetchText(url, options)
 
         // the response data is a html fragment in the shape of 
         // `<div class="aw-item">...</div> <div class="aw-item">...</div> ...`

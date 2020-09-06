@@ -1,5 +1,5 @@
 
-import { BoolString, Options, BaseItem, fetchReq, saveItemJson, formatInt, formatBoolString } from "./utils"
+import { BoolString, Options, BaseItem, fetchText, saveItemJson, formatInt, formatBoolString } from "./utils"
 
 export const ERR_TOPIC_NOT_FOUND = new Error("topic not found")
 
@@ -101,8 +101,8 @@ const formatTopicInfo = (raw: RawTopicInfo): TopicInfo => {
  */
 export const fetchTopicInfo = async (topicId: number, options: Options) => {
     const url = buildReqUrl(options.siteUrl, topicId)
-    const r = await fetchReq(url, options)
-    const data: RawTopicInfo | RawTopicInfoErr = await r.json()
+    const jsonStr = await fetchText(url, options)
+    const data: RawTopicInfo | RawTopicInfoErr = JSON.parse(jsonStr)
     if (!data.topic_id) {
         throw ERR_TOPIC_NOT_FOUND
     }

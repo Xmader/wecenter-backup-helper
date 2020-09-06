@@ -1,6 +1,6 @@
 
 import { JSDOM } from "jsdom"
-import { Item, PostType, ReplyTypeMap, Options, fetchReq, saveItemJson, formatInt } from "./utils"
+import { Item, PostType, ReplyTypeMap, Options, fetchText, saveItemJson, formatInt } from "./utils"
 import { PostLike, parsePostLike, parseUid } from "./postlike"
 import { fetchDiscussionsIt } from "./discussions"
 
@@ -75,8 +75,7 @@ const hasDiscussion = (d: Post<PostType> | Reply<PostType>) => {
 export async function* fetchPostIt<T extends PostType> (postType: T, postId: number, options: Options) {
     for (let page = 1; ; page++) {
         const url = buildReqUrl(options.siteUrl, postType, postId, page)
-        const r = await fetchReq(url, options)
-        const html = await r.text()
+        const html = await fetchText(url, options)
         if (html.startsWith(NOT_FOUND_TEXT)) {
             throw ERR_POST_NOT_FOUND
         }
