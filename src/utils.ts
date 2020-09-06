@@ -83,6 +83,7 @@ export const fetchText = async (url: string, options: Options): Promise<string> 
         const data = await CloudScraper({
             method: "GET",
             url,
+            simple: false, // do not reject on status codes other than 2xx
         })
         return data
     } else {
