@@ -1,6 +1,6 @@
 {
     "name": "wecenter-backup-helper",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "Backup WeCenter sites with ease",
     "main": "dist/index.js",
     "module": "src/index.ts",
