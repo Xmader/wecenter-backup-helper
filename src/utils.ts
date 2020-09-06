@@ -1,6 +1,5 @@
 
-// @ts-ignore
-import Humanoid from "humanoid-js"
+import CloudScraper from "cloudscraper"
 import fetch from "node-fetch"
 import fs from "fs-extra"
 import path from "path"
@@ -78,13 +77,14 @@ export const formatBoolString = (s: string | undefined): boolean => {
 }
 
 
-let humanoid = new Humanoid()
-
 export const fetchText = async (url: string, options: Options): Promise<string> => {
     if (options.bypassCloudflare) {
-        // use https://github.com/evyatarmeged/Humanoid to bypass Cloudflare challenges
-        const r = await humanoid.get(url)
-        return r.body
+        // use https://github.com/codemanki/cloudscraper to bypass Cloudflare challenges
+        const data = await CloudScraper({
+            method: "GET",
+            url,
+        })
+        return data
     } else {
         // use normal node-fetch
         const r = await fetch(url, {
