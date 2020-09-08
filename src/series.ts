@@ -56,5 +56,10 @@ export async function saveSeriesOf (type: Type, options: Options, startId: numbe
         }
     }
 
-    await queue.onIdle()
+    console.info(type, "finished")
+
+    await Promise.race([
+        queue.onIdle(),
+        new Promise((resolve) => setTimeout(resolve, 60 * 1000)), // 60s timeout
+    ])
 }
