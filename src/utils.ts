@@ -16,6 +16,7 @@ export interface Options {
     concurrency?: number;
     interval?: number;
     intervalCap?: number;
+    timeout?: number;
 
     checkPagination?: boolean;
     itemsPerPage?: number;
