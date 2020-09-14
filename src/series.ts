@@ -21,7 +21,7 @@ const ERR_NOT_FOUND = [ERR_TOPIC_NOT_FOUND, ERR_USER_NOT_FOUND, ERR_POST_NOT_FOU
 
 export async function saveSeriesOf (type: Type, options: Options, startId: number = 1, endId: number = Infinity) {
     const concurrency = options.concurrency || 100
-    const timeout = options.timeout
+    const timeout = options.timeout || undefined
     const interval = options.interval || 0
     const intervalCap = options.intervalCap || Infinity
     console.info(type, "concurrency:", concurrency, "timeout", timeout, "interval:", interval, "intervalCap:", intervalCap)
