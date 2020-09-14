@@ -24,7 +24,7 @@ export async function saveSeriesOf (type: Type, options: Options, startId: numbe
     const timeout = options.timeout || undefined
     const interval = options.interval || 0
     const intervalCap = options.intervalCap || Infinity
-    console.info(type, "concurrency:", concurrency, "timeout", timeout, "interval:", interval, "intervalCap:", intervalCap)
+    console.info(type, "concurrency:", concurrency, "timeout:", timeout, "interval:", interval, "intervalCap:", intervalCap)
 
     const queue = new PQueue({ concurrency, timeout, interval, intervalCap })
 
