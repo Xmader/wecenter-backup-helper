@@ -1,5 +1,5 @@
 
-import { Options, BaseItem, fetchText, saveItemJson } from "./utils"
+import { Options, BaseItem, fetchText, saveItemJson, saveImg } from "./utils"
 
 export const ERR_USER_NOT_FOUND = new Error("user not found")
 
@@ -81,7 +81,8 @@ export const fetchUserInfo = async (uid: number, options: Options) => {
  * Fetch and Save user info
  */
 export const saveUserInfo = async (uid: number, options: Options) => {
-    const data = await fetchUserInfo(uid, options)
-    await saveItemJson(data, options)
+    const info = await fetchUserInfo(uid, options)
+    await saveItemJson(info, options)
+    await saveImg(info.avatar, options)
 }
 

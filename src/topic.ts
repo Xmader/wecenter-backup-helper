@@ -1,5 +1,5 @@
 
-import { BoolString, Options, BaseItem, fetchText, saveItemJson, formatInt, formatBoolString } from "./utils"
+import { BoolString, Options, BaseItem, fetchText, saveItemJson, formatInt, formatBoolString, saveImg } from "./utils"
 
 export const ERR_TOPIC_NOT_FOUND = new Error("topic not found")
 
@@ -113,6 +113,7 @@ export const fetchTopicInfo = async (topicId: number, options: Options) => {
  * Fetch and Save topic info
  */
 export const saveTopicInfo = async (topicId: number, options: Options) => {
-    const data = await fetchTopicInfo(topicId, options)
-    await saveItemJson(data, options)
+    const info = await fetchTopicInfo(topicId, options)
+    await saveItemJson(info, options)
+    await saveImg(info.pic, options)
 }

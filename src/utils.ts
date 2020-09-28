@@ -13,6 +13,9 @@ export interface Options {
     userAgent?: string;
     bypassCloudflare?: boolean;
 
+    /** backup topic/user avatar */
+    saveAvatar?: boolean;
+
     concurrency?: number;
     interval?: number;
     intervalCap?: number;
@@ -126,3 +129,21 @@ export const formatContents = (containerEl: HTMLElement) => {
 
     return containerEl.innerHTML.trim()
 }
+
+
+export const saveImg = async (imgUrl: string | undefined, options: Options) => {
+    if (options.saveAvatar) {
+        if (imgUrl && !imgUrl.includes("static")) { // ignore the default avatar
+            imgUrl = imgUrl.replace("_mid", "_max")  // save the maximum resolution
+
+            const { origin, pathname } = new URL(imgUrl)
+
+            const r = await fetch(origin + pathname /** omit the query string */, {
+                headers: { "User-Agent": options.userAgent!, }
+            })
+
+            const img = await r.arrayBuffer()
+            await saveFile(pathname, Buffer.from(img), options)
+        }
+    }
+} 
