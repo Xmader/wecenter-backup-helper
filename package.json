@@ -8,7 +8,7 @@
         "@types/fs-extra": "^8.1.1",
         "@types/jsdom": "^12.2.4",
         "@types/node-fetch": "^2.5.7",
-        "cloudscraper": "git+https://github.com/Xmader/cloudscraper.git",
+        "cloudscraper": "git+https://github.com/Xmader/cloudscraper.git#4.7.0",
         "fs-extra": "^8.1.0",
         "jsdom": "^15.1.1",
         "node-fetch": "^2.6.0",
